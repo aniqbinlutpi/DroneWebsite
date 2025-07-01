@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Comprehensive dropdown z-index fix for all pages */
+[x-show="open"] {
+    z-index: 2147483647 !important; /* Maximum possible z-index */
+    position: relative !important;
+}
+
+/* Ensure dropdown content is always on top */
+.dropdown-content {
+    z-index: 2147483647 !important;
+    position: absolute !important;
+    isolation: isolate !important;
+    transform: translateZ(0) !important; /* Force hardware acceleration */
+}
+
+/* Fix for any backdrop blur creating new stacking context */
+.backdrop-blur-md,
+.backdrop-blur-sm,
+.backdrop-blur-lg {
+    isolation: auto !important;
+}
+
+/* Ensure navigation is below dropdown but above content */
+nav {
+    z-index: 1000 !important;
+}
+
+/* Prevent transforms from creating stacking contexts that interfere */
+.hover\:scale-105:hover,
+.hover\:transform:hover,
+[class*="transform"],
+[class*="scale"] {
+    z-index: auto !important;
+}
+
+/* Fix for gradient backgrounds that might create stacking contexts */
+.bg-gradient-to-br,
+.bg-gradient-to-r,
+[class*="gradient"] {
+    z-index: auto !important;
+}
+
+/* Ensure dropdown trigger is clickable */
+.relative [x-data] {
+    z-index: 1001 !important;
+}
+
+/* Override any conflicting z-index on main content */
+main,
+.min-h-screen,
+section,
+div[class*="relative"] {
+    z-index: auto !important;
+}
+
+/* Specific fix for main.relative in app layout */
+main.relative {
+    z-index: 1 !important;
+}
+
+/* Force dropdown to be above everything */
+div[x-data*="open"] div[x-show="open"] {
+    z-index: 2147483647 !important;
+    position: fixed !important;
+    transform: translateZ(0) !important;
+}
