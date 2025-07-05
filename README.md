@@ -72,8 +72,7 @@ A modern e-commerce platform for drone sales and racing course bookings, built w
    ```
 
 5. **Access the application**
-   - Website: http://localhost:8080
-   - Admin Panel: http://localhost:8080/admin (login with seeded admin credentials)
+   - Website: http://localhost:8081
 
 ### Development Setup
 
