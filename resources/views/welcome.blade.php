@@ -190,6 +190,85 @@
         </div>
     </section>
 
+    <!-- All Drones Section -->
+    <section class="py-16 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">All Drones</h2>
+                <p class="text-gray-400 text-base">Browse our full drone collection</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @php
+                    $allProducts = \App\Models\Product::where('is_active', true)
+                        ->with('category')
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+                @endphp
+                
+                @forelse($allProducts as $product)
+                    <div class="bg-gray-800 rounded-2xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group">
+                        <div class="aspect-w-16 aspect-h-12 h-48 relative">
+                            @if($product->featured_image)
+                                <img src="{{ $product->featured_image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                    </svg>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="p-4 sm:p-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs sm:text-sm text-blue-400 font-medium">{{ $product->category->name ?? 'Drone' }}</span>
+                            </div>
+                            <h3 class="text-lg sm:text-xl font-semibold text-white mb-2">{{ $product->name }}</h3>
+                            <p class="text-gray-400 text-sm mb-4 line-clamp-2">{{ $product->short_description }}</p>
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                                <div>
+                                    @if($product->sale_price)
+                                        <span class="text-xl sm:text-2xl font-bold text-green-400">RM {{ number_format($product->sale_price, 2) }}</span>
+                                        <span class="text-gray-500 line-through text-sm ml-2">RM {{ number_format($product->price, 2) }}</span>
+                                    @else
+                                        <span class="text-xl sm:text-2xl font-bold text-white">RM {{ number_format($product->price, 2) }}</span>
+                                    @endif
+                                </div>
+                                <div class="flex flex-col sm:flex-row gap-2">
+                                    <a href="{{ route('products.show', $product->slug) }}" class="text-blue-400 hover:text-blue-300 px-3 py-2 border border-blue-400 rounded-lg transition-colors text-center text-sm">
+                                        Learn More
+                                    </a>
+                                    @auth
+                                        @if($product->stock_quantity > 0)
+                                            <form action="{{ route('cart.add', $product) }}" method="POST" class="inline">
+                                                @csrf
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">
+                                                    Add to Cart
+                                                </button>
+                                            </form>
+                                        @else
+                                            <button disabled class="w-full bg-gray-600 text-gray-400 px-3 py-2 rounded-lg cursor-not-allowed text-sm">
+                                                Out of Stock
+                                            </button>
+                                        @endif
+                                    @else
+                                        <a href="{{ route('login') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors text-center text-sm">
+                                            Login to Buy
+                                        </a>
+                                    @endauth
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center text-gray-400">
+                        No drones found.
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
     <!-- Courses Section -->
     <section class="py-20 bg-black">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
